@@ -1,0 +1,298 @@
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lacak Lokasi Pengunjung Link</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <header class="bg-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+      <h1 class="text-2xl font-semibold text-indigo-600 flex items-center">
+        <i class="fas fa-map-marker-alt mr-2"></i> LacakLokasi
+      </h1>
+      <nav class="space-x-6 text-gray-700 hidden md:flex">
+        <a href="#tracker" class="hover:text-indigo-600 font-medium">Lacak</a>
+        <a href="#history" class="hover:text-indigo-600 font-medium">Riwayat</a>
+        <a href="#about" class="hover:text-indigo-600 font-medium">Tentang</a>
+      </nav>
+      <button
+        id="btn-menu"
+        class="md:hidden text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+        aria-label="Toggle menu"
+      >
+        <i class="fas fa-bars fa-lg"></i>
+      </button>
+    </div>
+    <nav
+      id="mobile-menu"
+      class="hidden bg-white border-t border-gray-200 md:hidden"
+      aria-label="Mobile menu"
+    >
+      <div class="px-4 py-3 space-y-2">
+        <a href="#tracker" class="block text-gray-700 font-medium hover:text-indigo-600">Lacak</a>
+        <a href="#history" class="block text-gray-700 font-medium hover:text-indigo-600">Riwayat</a>
+        <a href="#about" class="block text-gray-700 font-medium hover:text-indigo-600">Tentang</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="flex-grow container mx-auto px-4 py-8 max-w-4xl">
+    <section id="tracker" class="mb-12">
+      <h2 class="text-3xl font-semibold text-indigo-700 mb-4 flex items-center">
+        <i class="fas fa-link mr-3"></i> Buat Link Pelacakan
+      </h2>
+      <p class="mb-6 text-gray-700">
+        Masukkan URL tujuan yang ingin Anda bagikan. Setiap orang yang membuka link pelacakan Anda akan otomatis dilacak lokasinya.
+      </p>
+      <form id="linkForm" class="space-y-4">
+        <div>
+          <label for="targetUrl" class="block text-gray-800 font-medium mb-1"
+            >URL Tujuan</label
+          >
+          <input
+            type="url"
+            id="targetUrl"
+            name="targetUrl"
+            placeholder="https://contoh.com"
+            required
+            class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+        <button
+          type="submit"
+          class="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-md transition"
+        >
+          <i class="fas fa-share mr-2"></i> Buat Link
+        </button>
+      </form>
+
+      <div id="result" class="mt-6 hidden">
+        <p class="text-gray-800 font-semibold mb-2">Link Pelacakan Anda:</p>
+        <div class="flex items-center space-x-2">
+          <input
+            type="text"
+            id="trackingLink"
+            readonly
+            class="flex-grow rounded-md border border-gray-300 px-4 py-2 bg-gray-100"
+          />
+          <button
+            id="copyBtn"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition"
+          >
+            <i class="fas fa-copy"></i> Salin
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="history" class="mb-12">
+      <h2 class="text-3xl font-semibold text-indigo-700 mb-4 flex items-center">
+        <i class="fas fa-history mr-3"></i> Riwayat Pelacakan
+      </h2>
+      <p class="mb-4 text-gray-700">
+        Daftar pengunjung yang membuka link pelacakan Anda beserta lokasi dan waktu kunjungan.
+      </p>
+      <div class="overflow-x-auto rounded-lg border border-gray-300 bg-white shadow-sm">
+        <table class="min-w-full text-left text-gray-700">
+          <thead class="bg-indigo-100">
+            <tr>
+              <th class="px-4 py-2 border-b border-indigo-200">No</th>
+              <th class="px-4 py-2 border-b border-indigo-200">IP Address</th>
+              <th class="px-4 py-2 border-b border-indigo-200">Lokasi</th>
+              <th class="px-4 py-2 border-b border-indigo-200">Waktu</th>
+              <th class="px-4 py-2 border-b border-indigo-200">User Agent</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody" class="divide-y divide-gray-200">
+            <tr>
+              <td colspan="5" class="text-center py-6 text-gray-400">Belum ada data pelacakan.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="about" class="mb-12">
+      <h2 class="text-3xl font-semibold text-indigo-700 mb-4 flex items-center">
+        <i class="fas fa-info-circle mr-3"></i> Tentang
+      </h2>
+      <p class="text-gray-700 leading-relaxed">
+        Website ini memungkinkan Anda membuat link pelacakan yang dapat digunakan untuk mengetahui lokasi pengunjung yang membuka link tersebut. Data lokasi diambil berdasarkan IP address pengunjung menggunakan layanan API eksternal. Semua data disimpan secara lokal di browser Anda dan tidak dikirim ke server manapun, sehingga privasi Anda tetap terjaga.
+      </p>
+      <p class="mt-4 text-gray-700 leading-relaxed">
+        <strong>Catatan:</strong> Pelacakan lokasi menggunakan IP address tidak selalu akurat 100%, terutama jika pengunjung menggunakan VPN atau proxy.
+      </p>
+    </section>
+  </main>
+
+  <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+    <div class="container mx-auto px-4 text-center text-gray-600 text-sm">
+      &copy; 2024 LacakLokasi. Semua hak cipta dilindungi.
+    </div>
+  </footer>
+
+  <script>
+    // Toggle mobile menu
+    const btnMenu = document.getElementById('btn-menu');
+    const mobileMenu = document.getElementById('mobile-menu');
+    btnMenu.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Storage key for tracking data
+    const STORAGE_KEY = 'lacakLokasiHistory';
+
+    // Load history from localStorage
+    function loadHistory() {
+      const historyTableBody = document.getElementById('historyTableBody');
+      const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      historyTableBody.innerHTML = '';
+      if (data.length === 0) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.setAttribute('colspan', '5');
+        td.className = 'text-center py-6 text-gray-400';
+        td.textContent = 'Belum ada data pelacakan.';
+        tr.appendChild(td);
+        historyTableBody.appendChild(tr);
+        return;
+      }
+      data.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-indigo-50';
+        tr.innerHTML = `
+          <td class="px-4 py-2 border-b border-gray-200">${index + 1}</td>
+          <td class="px-4 py-2 border-b border-gray-200 font-mono">${item.ip}</td>
+          <td class="px-4 py-2 border-b border-gray-200">${item.city}, ${item.region}, ${item.country}</td>
+          <td class="px-4 py-2 border-b border-gray-200">${new Date(item.timestamp).toLocaleString('id-ID')}</td>
+          <td class="px-4 py-2 border-b border-gray-200 break-words max-w-xs">${item.userAgent}</td>
+        `;
+        historyTableBody.appendChild(tr);
+      });
+    }
+
+    loadHistory();
+
+    // Generate tracking link
+    const linkForm = document.getElementById('linkForm');
+    const resultDiv = document.getElementById('result');
+    const trackingLinkInput = document.getElementById('trackingLink');
+    const copyBtn = document.getElementById('copyBtn');
+
+    linkForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const targetUrl = linkForm.targetUrl.value.trim();
+      if (!targetUrl) return;
+
+      // Generate a unique ID for the tracking link
+      const trackingId = 'trk_' + Math.random().toString(36).substring(2, 10);
+
+      // Save the target URL with trackingId in localStorage
+      let links = JSON.parse(localStorage.getItem('lacakLokasiLinks')) || {};
+      links[trackingId] = targetUrl;
+      localStorage.setItem('lacakLokasiLinks', JSON.stringify(links));
+
+      // Construct the tracking link (current site + ?id=trackingId)
+      const baseUrl = window.location.origin + window.location.pathname;
+      const trackingUrl = `${baseUrl}?id=${trackingId}`;
+
+      trackingLinkInput.value = trackingUrl;
+      resultDiv.classList.remove('hidden');
+    });
+
+    copyBtn.addEventListener('click', () => {
+      trackingLinkInput.select();
+      trackingLinkInput.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(trackingLinkInput.value);
+      copyBtn.innerHTML = '<i class="fas fa-check"></i> Tersalin';
+      setTimeout(() => {
+        copyBtn.innerHTML = '<i class="fas fa-copy"></i> Salin';
+      }, 2000);
+    });
+
+    // Function to get IP and location info from ipapi.co
+    async function getIpLocation() {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        if (!response.ok) throw new Error('Gagal mengambil data lokasi');
+        const data = await response.json();
+        return {
+          ip: data.ip || 'Unknown',
+          city: data.city || 'Unknown',
+          region: data.region || 'Unknown',
+          country: data.country_name || 'Unknown',
+        };
+      } catch (error) {
+        return {
+          ip: 'Unknown',
+          city: 'Unknown',
+          region: 'Unknown',
+          country: 'Unknown',
+        };
+      }
+    }
+
+    // On page load, check if URL has ?id=trackingId param
+    async function handleTrackingRedirect() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const trackingId = urlParams.get('id');
+      if (!trackingId) return;
+
+      // Get stored links
+      const links = JSON.parse(localStorage.getItem('lacakLokasiLinks')) || {};
+      const targetUrl = links[trackingId];
+      if (!targetUrl) {
+        alert('Link pelacakan tidak valid atau sudah dihapus.');
+        return;
+      }
+
+      // Get visitor info
+      const location = await getIpLocation();
+      const userAgent = navigator.userAgent;
+      const timestamp = new Date().toISOString();
+
+      // Save tracking data
+      let history = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      history.push({
+        ip: location.ip,
+        city: location.city,
+        region: location.region,
+        country: location.country,
+        userAgent,
+        timestamp,
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+
+      // Redirect to target URL after short delay
+      const redirectDelay = 1500;
+      document.body.innerHTML = `
+        <div class="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4 text-center">
+          <img src="https://placehold.co/150x150/png?text=Loading+Location" alt="Ilustrasi animasi loading lokasi dengan peta dan tanda lokasi berwarna biru" class="mb-6" />
+          <h1 class="text-2xl font-semibold text-indigo-700 mb-2">Sedang mengarahkan...</h1>
+          <p class="text-gray-700 mb-4">Memproses pelacakan lokasi Anda sebelum menuju tujuan.</p>
+          <div class="w-16 h-16 border-4 border-indigo-300 border-t-indigo-600 rounded-full animate-spin"></div>
+        </div>
+      `;
+      setTimeout(() => {
+        window.location.href = targetUrl;
+      }, redirectDelay);
+    }
+
+    handleTrackingRedirect();
+  </script>
+</body>
+</html>
